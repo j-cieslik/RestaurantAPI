@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 namespace RestaurantAPI.Controllers
 {
     [Route("api/restaurant")]
+    [ApiController]
     public class RestaurantController : ControllerBase
     {
         private readonly IRestaurantService _restaurantService;
@@ -24,46 +25,34 @@ namespace RestaurantAPI.Controllers
         [HttpDelete("{id}")]
         public ActionResult Delete([FromRoute] int id)
         {
-            var isDeleted = _restaurantService.Delete(id);
+            _restaurantService.Delete(id);
 
-            if (isDeleted)
-            {
-                return NoContent();
-            }
-
-            return NotFound();
+            return NoContent();
         }
 
         [HttpPut("{id}")]
         public ActionResult Update([FromRoute] int id, [FromBody] UpdateRestaurantDto dto)
         {
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            //dodanie [ApiController] sprawia, że model jest walidowany
+            //if (!ModelState.IsValid)
+            //{
+            //    return BadRequest(ModelState);
+            //}
             
-            var isUpdated = _restaurantService.UpdateRestaurant(id, dto);
+            _restaurantService.UpdateRestaurant(id, dto);
 
-            if (isUpdated)
-            {
-                return Ok();
-            }
-
-            return NotFound();
+            return Ok();
         }
 
         [HttpPost]
         public ActionResult CreateRestaurant([FromBody] CreateRestaurantDto dto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return BadRequest(ModelState);
+            //}
 
-
-            var restaurantID = _restaurantService.Create(dto);
-    
+            var restaurantID = _restaurantService.Create(dto);    
 
             return Created($"/api/restaurant/{restaurantID}", null);
         }
@@ -81,11 +70,6 @@ namespace RestaurantAPI.Controllers
         public ActionResult<RestaurantDto> Get([FromRoute] int id)
         {
             var restaurantDto = _restaurantService.GetById(id);
-
-            if (restaurantDto is null)
-            {
-                return NotFound();
-            }
 
             return Ok(restaurantDto);
         }

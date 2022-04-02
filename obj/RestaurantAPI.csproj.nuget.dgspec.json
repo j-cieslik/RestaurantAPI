@@ -57,13 +57,17 @@
               "target": "Package",
               "version": "[5.0.15, )"
             },
-            "NLog": {
+            "NLog.Web.AspNetCore": {
               "target": "Package",
-              "version": "[4.7.15, )"
+              "version": "[4.14.0, )"
             },
             "Pomelo.EntityFrameworkCore.MySql": {
               "target": "Package",
               "version": "[5.0.4, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[6.3.0, )"
             }
           },
           "imports": [

@@ -12,7 +12,7 @@ namespace RestaurantAPI.Services
         IEnumerable<RestaurantDto> GetAll();
         int Create(CreateRestaurantDto dto);
 
-        bool Delete(int id);
-        bool UpdateRestaurant(int id, UpdateRestaurantDto dto);
+        void Delete(int id);
+        void UpdateRestaurant(int id, UpdateRestaurantDto dto);
     }
 }
