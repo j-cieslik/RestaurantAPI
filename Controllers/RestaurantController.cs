@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RestaurantAPI.Entities;
+using RestaurantAPI.Interfaces;
 using RestaurantAPI.Models;
 using RestaurantAPI.Services;
 using System;
@@ -13,6 +15,7 @@ namespace RestaurantAPI.Controllers
 {
     [Route("api/restaurant")]
     [ApiController]
+    [Authorize]
     public class RestaurantController : ControllerBase
     {
         private readonly IRestaurantService _restaurantService;
@@ -45,6 +48,9 @@ namespace RestaurantAPI.Controllers
         }
 
         [HttpPost]
+        //[Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Admin,Manager")] //prioretet ma atrybut umieszczony tu
         public ActionResult CreateRestaurant([FromBody] CreateRestaurantDto dto)
         {
             //if (!ModelState.IsValid)
@@ -59,6 +65,7 @@ namespace RestaurantAPI.Controllers
 
 
         [HttpGet]
+        [Authorize(Policy = "HasNationality")] //policy musi pokrywać się z tą w klasie startup
         public ActionResult<IEnumerable<RestaurantDto>> GetAll()
         {
             var restaurantsDtos = _restaurantService.GetAll();
@@ -67,6 +74,7 @@ namespace RestaurantAPI.Controllers
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public ActionResult<RestaurantDto> Get([FromRoute] int id)
         {
             var restaurantDto = _restaurantService.GetById(id);
