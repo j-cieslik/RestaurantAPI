@@ -9,6 +9,7 @@ using RestaurantAPI.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace RestaurantAPI.Controllers
@@ -28,6 +29,7 @@ namespace RestaurantAPI.Controllers
         [HttpDelete("{id}")]
         public ActionResult Delete([FromRoute] int id)
         {
+            //_restaurantService.Delete(id, User);
             _restaurantService.Delete(id);
 
             return NoContent();
@@ -42,6 +44,7 @@ namespace RestaurantAPI.Controllers
             //    return BadRequest(ModelState);
             //}
             
+           // _restaurantService.UpdateRestaurant(id, dto, User);
             _restaurantService.UpdateRestaurant(id, dto);
 
             return Ok();
@@ -58,6 +61,8 @@ namespace RestaurantAPI.Controllers
             //    return BadRequest(ModelState);
             //}
 
+            //var userId = int.Parse(User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
+
             var restaurantID = _restaurantService.Create(dto);    
 
             return Created($"/api/restaurant/{restaurantID}", null);
@@ -65,7 +70,8 @@ namespace RestaurantAPI.Controllers
 
 
         [HttpGet]
-        [Authorize(Policy = "HasNationality")] //policy musi pokrywać się z tą w klasie startup
+        //[Authorize(Policy = "HasNationality")] //policy musi pokrywać się z tą w klasie startup
+        [Authorize(Policy = "Atleast20")]
         public ActionResult<IEnumerable<RestaurantDto>> GetAll()
         {
             var restaurantsDtos = _restaurantService.GetAll();
