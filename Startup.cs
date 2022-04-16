@@ -36,6 +36,7 @@ namespace RestaurantAPI
             Configuration.GetSection("Authentication").Bind(authenticationSettings);
 
             services.AddSingleton(authenticationSettings);
+
             services.AddAuthentication(option =>
             {
                 option.DefaultAuthenticateScheme = "Bearer";
@@ -60,8 +61,11 @@ namespace RestaurantAPI
                 //options.AddPolicy("HasNationality", builder => builder.RequireClaim("Nationality", "German", "Polish"));
 
                 options.AddPolicy("Atleast20", builder => builder.AddRequirements(new MinimumAgeRequirement(20)));
+                options.AddPolicy("Atleast2Restaurants", builder => builder.AddRequirements(new MinimumRestaurantsRequirement(2)));
+                
             });
 
+            services.AddScoped<IAuthorizationHandler, MinimumRestaurantsRequirementHandler>();
             services.AddScoped<IAuthorizationHandler, MinimumAgeRequirementHandler>();
             services.AddScoped<IAuthorizationHandler, ResourceOperationRequirementHandler>();
             services.AddControllers().AddFluentValidation();
