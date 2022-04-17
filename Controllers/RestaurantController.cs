@@ -71,10 +71,11 @@ namespace RestaurantAPI.Controllers
 
         [HttpGet]
         //[Authorize(Policy = "HasNationality")] //policy musi pokrywać się z tą w klasie startup
-        [Authorize(Policy = "Atleast2Restaurants")]
-        public ActionResult<IEnumerable<RestaurantDto>> GetAll()
+        //[Authorize(Policy = "Atleast2Restaurants")]
+        [AllowAnonymous]
+        public ActionResult<IEnumerable<RestaurantDto>> GetAll([FromQuery]RestaurantQuery query) 
         {
-            var restaurantsDtos = _restaurantService.GetAll();
+            var restaurantsDtos = _restaurantService.GetAll(query);
 
             return Ok(restaurantsDtos);
         }
